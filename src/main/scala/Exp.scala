@@ -9,6 +9,7 @@ abstract class Exp {
 
   def coerceAtom: String = throw InvalidCoercion("this is not an atom")
   def coerceString: String = throw InvalidCoercion("this is not a string")
+  def coerceList: List[Exp] = throw InvalidCoercion("this is not a list")
 }
 
 abstract class ExpTransformer[A] {
@@ -22,6 +23,8 @@ abstract class ExpTransformer[A] {
 case class ListExp(list: List[Exp]) extends Exp {
   override def toString: String =
     "(" + list.map(_ toString).reduceLeft(_+" "+_) + ")"
+
+  override def coerceList: List[Exp] = list
 
   override def transform[A](transformer: ExpTransformer[A]): A =
     transformer.transformList(list, list.map(_.transform(transformer)))

@@ -21,20 +21,46 @@ object Evaluator {
       builtins(name)(args.map(apply(_, env)))
   }
 
-  def evalQuasiquote(body: List[Exp], env: Map[String, Exp]): Exp = {
-    null
+  private class QuasiquoterTransformer(val env: Map[String, Exp])
+      extends ExpTransformer[Exp] {
+    
+    override def transformList(list: List[Exp], results: List[Exp]): Exp = {
+      results match {
+        case List(AtomExp("unquote"), body) => apply(body, env)
+        case _ => ListExp(results)
+      }
+    }
+
+    override def transformAtom(atom: String): Exp = AtomExp(atom)
+    override def transformString(string: String): Exp = StringExp(string)
+    override def transformNumber(number: Double): Exp = NumberExp(number)
+    override def transformBoolean(boolean: Boolean): Exp = BooleanExp(boolean)
   }
 
+  def evalQuasiquote(body: List[Exp], env: Map[String, Exp]): Exp =
+    body(0).transform(new QuasiquoterTransformer(env))
+
   def evalLet(body: List[Exp], env: Map[String, Exp]): Exp = {
-    null
+    def evalDecl(decl: Exp): (String, Exp) = decl match {
+      case ListExp(List(AtomExp(name), value)) => name -> apply(value, env)
+      case _ => throw EvaluationException("invalid let syntax")
+    }
+
+    body match {
+      case List(ListExp(decls), exp) => {
+        val newEnv = env ++ decls.map(evalDecl)
+        apply(exp, newEnv)
+      }
+      case _ => throw EvaluationException("invalid let syntax")
+    }
   }
 
   def apply(exp: Exp, env: Map[String, Exp]): Exp = exp match {
     case ListExp(AtomExp("quasiquote") :: body) => evalQuasiquote(body, env)
     case ListExp(AtomExp("let") :: body) => evalLet(body, env)
     case ListExp(AtomExp(func) :: args) => evalFunc(func, args, env)
+    case AtomExp(name) => env(name)
     // Self-evaluating forms
-    case AtomExp(_) => exp
     case StringExp(_) => exp
     case BooleanExp(_) => exp
     case NumberExp(_) => exp

@@ -23,12 +23,22 @@ object BuildBro {
       targetName = args(0)
     }
 
+    // 1. Read the contents of the build.bro file
     val contents = Source.fromFile("build.bro").mkString
+    // 2. Read in the contents as s-expressions
     val exp = ExpReader(contents.trim)
     if(verbose) { println(exp); println() }
-    val (macros, projectExp) = ProjectPreParser(exp)
-    val project = ProjectParser(projectExp)
+    // 3. Pre-parse the expression to get the macros out
+    val (macroExps, projectExp) = ProjectPreParser(exp)
+    // 4. Parse the macros
+    val macros = MacroParser(macroExps)
+    // 5. Expand the macros within the expression
+    val expandedProjectExp = MacroExpander(projectExp, macros)
+    if(verbose) { println(expandedProjectExp); println() }
+    // 6. Parse the project definition
+    val project = ProjectParser(expandedProjectExp)
     if(verbose) { println(project); println() }
+    // 7. Execute the project
     project.exec(targetName, dryRun)
   }
 }

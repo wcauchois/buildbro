@@ -75,7 +75,7 @@ case class Target(
   commands: List[Command]
 ) {
   def isUpToDate: Boolean = {
-    if(dependsFiles.isEmpty)
+    /*if(dependsFiles.isEmpty)
       return !createsFiles.isEmpty
 
     var earliestModified = dependsFiles.map(dependedFileName => {
@@ -87,7 +87,9 @@ case class Target(
     createsFiles.forall(createdFileName => {
       val createdFile = new File(createdFileName)
       createdFile.exists && createdFile.lastModified >= earliestModified
-    })
+    })*/
+    // XXX: I'm pretty sure the logic above is flawed in some way
+    false
   }
 
   def exec(dryRun: Boolean) {

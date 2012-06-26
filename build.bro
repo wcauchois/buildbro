@@ -5,14 +5,16 @@
           (object-name (string-append name ".o")))
       `(target ,target-name
          (depends ,source-name) (creates ,object-name)
-         (! ,(string-append "gcc -o " object-name " " source-name))))
+         (! ,(string-append "gcc -c " source-name))))
   ]
-  [target compile (depends "main.c") (creates "build/foo")
-    (! "gcc -o foo main.c")
-    (! "mkdir -p build")
-    (mv "foo" "build/foo")
+  [macro (object-file-target name)
+    (string->symbol (string-append "compile-" name "-o"))
+  ]
+  (object-file "main")
+  [target compile (depends (object-file-target "main")) (creates "foo")
+    (! "gcc -o foo main.o")
   ]
   [target run (depends compile) (creates)
-    (! "./build/foo")
+    (! "./foo")
   ]
 }

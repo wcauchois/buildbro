@@ -15,20 +15,20 @@ case class Project(
   private case class Node(target: Target, depends: List[Target])
 
   private def getDependencies(target: Target): List[Target] = {
-    def loop(current: Target, visited: List[Target]): ListBuffer[Target] = {
+    def rec(current: Target, visited: List[Target]): ListBuffer[Target] = {
       if(visited.contains(current))
         throw ExecFailedException("there is a cycle in the dependency graph")
       var dependencies = ListBuffer(current)
       val newVisited = current :: visited
       for(dependencyName <- current.dependsTargets) {
-        for(subDependency <- loop(targets(dependencyName), newVisited)) {
+        for(subDependency <- rec(targets(dependencyName), newVisited)) {
           if(!dependencies.contains(subDependency))
             dependencies += subDependency
         }
       }
       dependencies
     }
-    loop(target, Nil).toList
+    rec(target, Nil).toList
   }
 
   private def nodesFromTargets(targets: List[Target]): List[Node] = {

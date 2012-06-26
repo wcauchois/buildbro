@@ -11,6 +11,7 @@ object BuildBro {
     var targetName: String = null
     var verbose: Boolean = false
     var dryRun: Boolean = false
+
     if(args(0).startsWith("-")) {
       val flags = args(0).tail
       if(flags.contains("v"))
@@ -18,13 +19,15 @@ object BuildBro {
       if(flags.contains("d"))
         dryRun = true
       targetName = args(1)
-    } else
+    } else {
       targetName = args(0)
+    }
 
     val contents = Source.fromFile("build.bro").mkString
     val exp = ExpReader(contents.trim)
     if(verbose) { println(exp); println() }
-    val project = ProjectParser(exp)
+    val (macros, projectExp) = ProjectPreParser(exp)
+    val project = ProjectParser(projectExp)
     if(verbose) { println(project); println() }
     project.exec(targetName, dryRun)
   }

@@ -19,3 +19,7 @@ case class NumberExp(number: Double) extends Exp {
   override def toString: String = number.toString
 }
 
+case class BooleanExp(boolean: Boolean) extends Exp {
+  override def toString: String = if(boolean) { "#t" } else { "#f" }
+}
+

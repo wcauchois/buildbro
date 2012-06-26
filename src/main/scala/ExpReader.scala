@@ -20,8 +20,14 @@ object ExpReader extends RegexParsers {
 
   def number: Parser[Exp] = """\d+(\.\d*)?""".r ^^
     { (x: String) => NumberExp(x.toDouble) }
+  
+  def unquotedExp: Parser[Exp] =
+    "," ~> exp ^^ { (x: Exp) => ListExp(List(AtomExp("unquote"), x)) }
 
-  def exp: Parser[Exp] = list | atom | string | number
+  def quasiquotedExp: Parser[Exp] =
+    "`" ~> exp ^^ { (x: Exp) => ListExp(List(AtomExp("quasiquote"), x)) }
+
+  def exp: Parser[Exp] = list | atom | string | number | unquotedExp | quasiquotedExp
 
   def apply(input: String): Exp = parseAll(exp, input) match {
     case Success(result, _) => result

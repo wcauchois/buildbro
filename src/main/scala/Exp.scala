@@ -3,7 +3,6 @@ case class InvalidCoercion(msg: String) extends Exception {
   override def toString: String = "InvalidCoercion: " + msg
 }
 
-
 abstract class Exp {
   def transform[A](transformer: ExpTransformer[A]): A
 

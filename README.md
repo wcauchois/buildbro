@@ -88,4 +88,29 @@ Macro expressions in BuildBro consist of either self-evaluating expressions, sta
         "A string" => "A string"
         22.0 => 22.0
 
- + **Standard forms**, such as `let` and `quasiquote`, 
+ + **Standard forms**, such as `let` and `quasiquote`, allow for control flow, variable binding, and quotation (which prevents the evaluation of a list or other expression).
+
+        (let ((x "Hi") (y "World")) (string-append x y)) => "HiWorld"
+        (quasiquote (this is a list)) => (this is a list)
+        (let ((the-answer 42)) (quasiquote (the answer is (unquote the-answer)) => (the answer is 42)
+
+ + **Function applications** allow builtin functions to be invoked with some (evaluated) arguments.
+
+        (string-append "Hi" "World") => "HiWorld"
+        (symbol->string "hi-world") => hi-world
+
+Reference
+---------
+
+### Standard Forms
+
+ + `(quasiquote expr)` will prevent the evaluation of a list or other expression. Additionally, each instance of `(unquote expr)` within a quasiquotation will be replaced with the result of evaluating the expression in the current environment.
+
+ + `(let ((name1 value1) (name2 value2) ...) expr)` will bind `name1` to `value1` and `name2` to `value2` (et cetera) while evaluating the specified expression.
+
+### Builtin Functions
+
+ + `(string-append . args)` will append all of its string arguments together.
+
+ + `(string->symbol str)` will convert a string into an atom.
+

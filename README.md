@@ -12,7 +12,7 @@ BuildBro is a simple build tool, much like Make, that manages the dependencies b
       ]
     }
 
-Note that \[\] and \{\} may also be used to delimit lists for improved readability.
+Here within each target the `!` command is used to execute a shell command. Note that \[\] and \{\} may also be used to delimit lists for improved readability.
 
 Syntax
 ======

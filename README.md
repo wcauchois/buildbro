@@ -100,15 +100,24 @@ Macro expressions in BuildBro consist of either self-evaluating expressions, sta
         (symbol->string "hi-world") => hi-world
 
 Reference
----------
+=========
 
-### Standard Forms
+Build Commands
+--------------
+
+ + `(! cmd)` executes a shell command.
+
+ + `(mv src dest)` moves a file from `src` to `dest`.
+
+Standard Forms
+--------------
 
  + `(quasiquote expr)` will prevent the evaluation of a list or other expression. Additionally, each instance of `(unquote expr)` within a quasiquotation will be replaced with the result of evaluating the expression in the current environment.
 
  + `(let ((name1 value1) (name2 value2) ...) expr)` will bind `name1` to `value1` and `name2` to `value2` (et cetera) while evaluating the specified expression.
 
-### Builtin Functions
+Builtin Functions
+-----------------
 
  + `(string-append . args)` will append all of its string arguments together.
 

@@ -85,7 +85,7 @@ Macro expressions in BuildBro consist of either self-evaluating expressions, sta
 
  + **Self-evaluating expressions**, such as strings and numbers, will always evaluate to themselves.
 
-      "A string" => "A string"
-      22.0 => 22.0
+        "A string" => "A string"
+        22.0 => 22.0
 
  + **Standard forms**, such as `let` and `quasiquote`, 

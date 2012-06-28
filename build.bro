@@ -9,7 +9,7 @@
   ]
   (object-file "main")
   (object-file "lib")
-  [target compile (depends "compile-main" "compile-lib") (creates "foo")
+  [target compile (depends compile-main compile-lib) (creates "foo")
     (! "gcc -o foo main.o lib.o")
   ]
   [target run (depends compile) (creates)

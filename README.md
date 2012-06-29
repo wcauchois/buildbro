@@ -4,7 +4,7 @@ Introduction
 BuildBro is a simple build tool, much like Make, that manages the dependencies between sets of executable commands called _targets_. Targets are specified using a symbolic expression-based language in a file called `build.bro`. To illustrate, here is a simple brofile:
 
     {project hello-world "Description goes here"
-      [target compile (depends "main.c") (creates foo)
+      [target compile (depends "main.c") (creates "foo")
         (! "gcc -o foo main.c")
       ]
       [target run (depends compile) (creates)

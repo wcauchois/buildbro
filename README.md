@@ -76,7 +76,7 @@ After macro expansion, the brofile looks like this:
 Expansion Semantics
 -------------------
 
-A macro represents a set of rules for transforming some arguments into a symbolic expression that will be substituted for each instantiation of the macro within the brofile. In the grammar above, `<EXPR>` stands for some expression that must evaluate to an atom, string, number, or list. Before BuildBro attempts to parse the project file, the macros are extracted and a process known as macro expansion occurs. Each instance of `(<macro> <args>)` will be replaced by the result of evaluating that macro with those arguments.
+A macro represents a set of rules for transforming some arguments into a symbolic expression that will be substituted for each instantiation of the macro within the brofile. In the grammar above, `<EXPR>` stands for some expression that must evaluate to an atom, string, number, or list. Before BuildBro attempts to parse the project file, the macros are extracted and a process known as macro expansion occurs. Each instance of `(<macro> <args>)` will be replaced by the result of evaluating that macro with those arguments. Note that arguments are _not_ evaluated in BuildBro. That is, if you invoke `(macro (string->append "hi"))` that macro will be passed the list `(string->append "hi")`, _not_ the result of applying `string->append` to `"hi"`.
 
 Evaluation Semantics
 --------------------
